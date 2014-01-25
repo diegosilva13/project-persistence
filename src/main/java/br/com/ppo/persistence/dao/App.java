@@ -1,4 +1,4 @@
-package persistence;
+package br.com.ppo.persistence.dao;
 
 /**
  * Hello world!
