@@ -15,6 +15,14 @@
   </properties>
 
   <dependencies>
+  <!-- dependencia para postgresql -->
+  <dependency>
+	<groupId>net.sf.squirrel-sql.plugins</groupId>
+	<artifactId>postgres</artifactId>
+	<version>3.5.0</version>
+</dependency>
+    
+    <!-- dependencia para postgresql -->        
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
