@@ -23,7 +23,7 @@ public class SuperDAO implements ISuperDAO{
 	@Override
 	public Boolean save(Object object) {
 		try {
-			prepare = conn.prepareStatement(sqlUtil.sqlSave(object));
+			//prepare = conn.prepareStatement(sqlUtil.sqlSave(object));
 			return prepare.execute();
 		} catch (SQLException e) {
 			e.printStackTrace();

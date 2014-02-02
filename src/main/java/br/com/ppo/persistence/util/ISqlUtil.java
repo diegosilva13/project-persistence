@@ -1,5 +1,7 @@
 package br.com.ppo.persistence.util;
 
+import java.util.List;
+
 public interface ISqlUtil{
 	public String sqlSave(Object object) throws Exception;
 	public String sqlUpdate(Object object) throws Exception;
