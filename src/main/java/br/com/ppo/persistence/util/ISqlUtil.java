@@ -8,4 +8,5 @@ public interface ISqlUtil{
 	public String sqlRemove(Object obj) throws Exception;
 	public String sqlRemoveAll(Class<?> clazz) throws Exception;
 	public String sqlFindAll(Class<?> clazz) throws Exception;
+	public String sqlSaveSucess(Object obj);
 }

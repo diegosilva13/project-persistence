@@ -170,4 +170,9 @@ public class SqlUtil implements ISqlUtil {
 		}
 		return null;
 	}
+	
+	@Override
+	public String sqlSaveSucess(Object obj){
+		return "SELECT * FROM \""+obj.getClass().getSimpleName()+"_id_seq\"";
+	}
 }

@@ -4,7 +4,7 @@ import java.util.List;
 
 public interface ISuperDAO<T> {
 	
-	public Boolean save(Object object);
+	public Object save(Object object);
 	public Object edit(Object object);
 	public Boolean remove(Object object);
 	public Boolean removeAll(Object object);
