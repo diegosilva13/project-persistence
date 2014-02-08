@@ -14,7 +14,7 @@ public class SqlUtil implements ISqlUtil {
 		StringBuffer sqlParte1 = new StringBuffer();
 		StringBuffer sqlParte2 = new StringBuffer();
 		try {
-			sqlParte1.append("INSERT INTO " + clazz.getSimpleName() + "(");
+			sqlParte1.append("INSERT INTO \"" + clazz.getSimpleName() + "\"(");
 			sqlParte2.append(" VALUES(");
 			while (clazz.getSuperclass() != null) {
 				for (Field field : clazz.getDeclaredFields()) {
@@ -64,7 +64,7 @@ public class SqlUtil implements ISqlUtil {
 		try {
 			Integer id = null;
 			sql.append("UPDATE ");
-			sql.append(clazz.getSimpleName());
+			sql.append("\""+clazz.getSimpleName()+"\"");
 			sql.append(" SET ");
 			while (clazz.getSuperclass() != null) {
 				for (Field field : clazz.getDeclaredFields()) {
@@ -107,7 +107,7 @@ public class SqlUtil implements ISqlUtil {
 	public String sqlRemove(Object obj) throws Exception {
 		StringBuffer sql = new StringBuffer();
 		Integer id = (Integer) this.getField(obj, "id");
-		sql.append("DELETE FROM ").append(obj.getClass().getSimpleName());
+		sql.append("DELETE FROM \"").append(obj.getClass().getSimpleName()+"\"");
 			if (id != null) {
 				sql.append(" WHERE ").append("id").append("=").append(id);
 			}
@@ -120,10 +120,9 @@ public class SqlUtil implements ISqlUtil {
 	}
 
 	@Override
-	public String sqlFindByObject(Object obj) throws Exception {
+	public String sqlFindById(Object obj, Object id) throws Exception {
 		StringBuffer sql = new StringBuffer();
-		Integer id = (Integer) this.getField(obj, "id");
-		sql.append("SELECT * FROM ").append(obj.getClass().getSimpleName());
+		sql.append("SELECT * FROM \"").append(obj.getClass().getSimpleName()+"\"");
 		if (id != null) {
 			sql.append(" WHERE ").append("id").append("=").append(id);
 		}
@@ -132,7 +131,7 @@ public class SqlUtil implements ISqlUtil {
 
 	@Override
 	public String sqlFindAll(Class<?> clazz) throws Exception {
-			return sqlFindByObject(clazz.newInstance());
+			return sqlFindById(clazz.newInstance(),null);
 	}
 	
 	private boolean isInstanceOfCollection(Object value) {
