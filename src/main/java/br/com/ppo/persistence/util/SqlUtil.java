@@ -5,10 +5,12 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Collection;
 
+import br.com.ppo.persistence.exception.UtilException;
+
 public class SqlUtil implements ISqlUtil {
 
 	@Override
-	public String sqlSave(Object obj) throws Exception {
+	public String sqlSave(Object obj) throws UtilException {
 		Class<?> clazz = obj.getClass();
 		StringBuffer querys = new StringBuffer();
 		StringBuffer sqlParte1 = new StringBuffer();
@@ -37,10 +39,10 @@ public class SqlUtil implements ISqlUtil {
 			buildSqlSave(querys, sqlParte1, sqlParte2);
 		} catch (IllegalAccessException e) {
 			e.printStackTrace();
-			throw new Exception("Ocorreu um erro inesperado.");
+			throw new UtilException(e,"Ocorreu um erro inesperado.");
 		} catch (IllegalArgumentException e) {
 			e.printStackTrace();
-			throw new Exception("Ocorreu um erro inesperado.");
+			throw new UtilException(e,"Ocorreu um erro inesperado.");
 		}
 		return querys.toString();
 	}
@@ -57,7 +59,7 @@ public class SqlUtil implements ISqlUtil {
 	}
 
 	@Override
-	public String sqlUpdate(Object obj) throws Exception {
+	public String sqlUpdate(Object obj) throws UtilException {
 		Class<?> clazz = obj.getClass();
 		StringBuffer sql = new StringBuffer();
 		StringBuffer querys = new StringBuffer();
@@ -93,18 +95,18 @@ public class SqlUtil implements ISqlUtil {
 			return id != null ? querys.toString().replaceAll(":id", String.valueOf(id)) : null;
 		} catch (SecurityException e) {
 			e.printStackTrace();
-			throw new Exception("Ocorreu um erro inesperado.");
+			throw new UtilException(e,"Ocorreu um erro inesperado.");
 		} catch (IllegalAccessException e) {
 			e.printStackTrace();
-			throw new Exception("Ocorreu um erro inesperado.");
+			throw new UtilException(e,"Ocorreu um erro inesperado.");
 		} catch (IllegalArgumentException e) {
 			e.printStackTrace();
-			throw new Exception("Ocorreu um erro inesperado.");
+			throw new UtilException(e,"Ocorreu um erro inesperado.");
 		}
 	}
 
 	@Override
-	public String sqlRemove(Object obj) throws Exception {
+	public String sqlRemove(Object obj) throws IllegalArgumentException, IllegalAccessException{
 		StringBuffer sql = new StringBuffer();
 		Integer id = (Integer) this.getField(obj, "id");
 		sql.append("DELETE FROM \"").append(obj.getClass().getSimpleName()+"\"");
@@ -115,12 +117,12 @@ public class SqlUtil implements ISqlUtil {
 	}
 
 	@Override
-	public String sqlRemoveAll(Class<?> clazz) throws Exception {
+	public String sqlRemoveAll(Class<?> clazz) throws IllegalArgumentException, IllegalAccessException, InstantiationException {
 		return sqlRemove(clazz.newInstance());
 	}
 
 	@Override
-	public String sqlFindById(Object obj, Object id) throws Exception {
+	public String sqlFindById(Object obj, Object id){
 		StringBuffer sql = new StringBuffer();
 		sql.append("SELECT * FROM \"").append(obj.getClass().getSimpleName()+"\"");
 		if (id != null) {
@@ -130,20 +132,20 @@ public class SqlUtil implements ISqlUtil {
 	}
 
 	@Override
-	public String sqlFindAll(Class<?> clazz) throws Exception {
+	public String sqlFindAll(Class<?> clazz) throws InstantiationException, IllegalAccessException{
 			return sqlFindById(clazz.newInstance(),null);
 	}
 	
-	private boolean isInstanceOfCollection(Object value) {
+	private boolean isInstanceOfCollection(Object value) throws UtilException {
 		try {
 			if (value instanceof Collection) {
 				return true;
 			}
+			return false;
 		} catch (ClassCastException e) {
 			e.printStackTrace();
-			return false;
+			throw new UtilException(e);
 		}
-		return false;
 	}
 
 	private boolean isNumeric(Object obj) {

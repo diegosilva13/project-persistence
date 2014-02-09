@@ -2,13 +2,15 @@ package br.com.ppo.persistence.dao;
 
 import java.util.List;
 
-public interface ISuperDAO<T> {
+import br.com.ppo.persistence.exception.PersistenceException;
+
+public interface ISuperDAO{
 	
-	public Object save(Object object);
-	public Object edit(Object object);
-	public Boolean remove(Object object);
-	public Boolean removeAll(Object object);
-	public Object findById(Object object, Object id);
+	public Object save(Object object) throws PersistenceException;
+	public Object update(Object object) throws PersistenceException;
+	public Boolean remove(Object object)throws PersistenceException;
+	public Boolean removeAll(Object object)throws PersistenceException;
+	public Object findById(Object object, Object id)throws PersistenceException;
 	@SuppressWarnings("rawtypes")
-	public List findAll(Class<?> clazz);
+	public List findAll(Class<?> clazz) throws PersistenceException;
 	}

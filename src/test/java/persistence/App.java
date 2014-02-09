@@ -1,24 +1,31 @@
 package persistence;
 
-import java.util.List;
-
 import br.com.ppo.persistence.dao.SuperDAO;
+import br.com.ppo.persistence.exception.PersistenceException;
 
 public class App {
 
 	/**
 	 * @param args
 	 */
-	@SuppressWarnings("unchecked")
 	public static void main(String[] args) {
 		Gerente gerente = new Gerente();
-		SuperDAO dao = new SuperDAO();
-		gerente.setCodigo("123450");
+		SuperDAO dao = null;
+		gerente.setCodigo("123451");
+		gerente.setNome("TESTETSTSSTST");
 		gerente.setCpf("123456789");
 		gerente.setEndereco("RUA Alsdraberto");
 		gerente.setRg("123456789");
 		gerente.setTelefone("12345678");
-		gerente = (Gerente) dao.save(gerente);
+		
+		try {
+			dao = new SuperDAO();
+			gerente = (Gerente) dao.save(gerente);
+			System.out.println(gerente.getCodigo());
+			gerente = (Gerente) dao.update(gerente);
+		} catch (PersistenceException e) {
+			e.printStackTrace();
+		}
 		System.out.println(gerente.getId());
 //		List<Gerente> listGerente = dao.findAll(Gerente.class);
 //		

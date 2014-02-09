@@ -6,9 +6,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Logger;
 
 import br.com.ppo.persistence.database.Config;
+import br.com.ppo.persistence.exception.PersistenceException;
 import br.com.ppo.persistence.util.ISqlUtil;
 import br.com.ppo.persistence.util.ObjectReflectionUtil;
 import br.com.ppo.persistence.util.SqlUtil;
@@ -20,14 +20,13 @@ public class SuperDAO implements ISuperDAO{
 	private ISqlUtil sqlUtil = new SqlUtil();
 	private ObjectReflectionUtil reflectionUtil = new ObjectReflectionUtil();
 	private PreparedStatement prepare;
-	Logger logger = Logger.getAnonymousLogger();
 	
-	public SuperDAO() {
+	public SuperDAO() throws PersistenceException{
 		this.conn = Config.startConection();
 	}
 	
 	@Override
-	public Object save(Object object) {
+	public Object save(Object object) throws PersistenceException {
 		try {
 			prepare = conn.prepareStatement(sqlUtil.sqlSave(object));
 			if(!prepare.execute()){
@@ -38,46 +37,57 @@ public class SuperDAO implements ISuperDAO{
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
+			throw new PersistenceException(e,"Ocorreu uma falha ao executar o SQL!");
 		} catch (Exception e) {
-			e.printStackTrace();
+			throw new PersistenceException(e);
 		}
 		return null;
 	}
 
 	@Override
-	public Object edit(Object object) {
-		// TODO Auto-generated method stub
+	public Object update(Object object) throws PersistenceException {
+		try {
+			prepare = conn.prepareStatement(sqlUtil.sqlUpdate(object));
+			if(!prepare.execute()){
+				return this.findById(object, reflectionUtil.getValue(object, "id"));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new PersistenceException(e,"Ocorreu uma falha ao executar o SQL!");
+		} catch (Exception e) {
+			throw new PersistenceException(e);
+		}
 		return null;
 	}
 
 	@Override
-	public Boolean remove(Object object) {
+	public Boolean remove(Object object) throws PersistenceException {
 		try {
 			prepare = conn.prepareStatement(sqlUtil.sqlRemove(object));
 			return !prepare.execute();
 		} catch (SQLException e) {
 			e.printStackTrace();
+			throw new PersistenceException(e,"Ocorreu uma falha ao executar o SQL!");
 		} catch (Exception e) {
-			e.printStackTrace();
+			throw new PersistenceException(e);
 		}
-		return false;
 	}
 
 	@Override
-	public Boolean removeAll(Object object) {
+	public Boolean removeAll(Object object) throws PersistenceException {
 		try {
 			prepare = conn.prepareStatement(sqlUtil.sqlRemoveAll(object.getClass()));
 			return !prepare.execute();
 		} catch (SQLException e) {
 			e.printStackTrace();
+			throw new PersistenceException(e,"Ocorreu uma falha ao executar o SQL!");
 		} catch (Exception e) {
-			e.printStackTrace();
+			throw new PersistenceException(e);
 		}
-		return false;
 	}
 
 	@Override
-	public Object findById(Object object, Object id) {
+	public Object findById(Object object, Object id) throws PersistenceException {
 		try {
 			Class<?> clazz = object.getClass();
 			prepare = conn.prepareStatement(sqlUtil.sqlFindById(object, id));
@@ -95,14 +105,14 @@ public class SuperDAO implements ISuperDAO{
 			return obj;
 		} catch (SQLException e) {
 			e.printStackTrace();
+			throw new PersistenceException(e,"Ocorreu uma falha ao executar o SQL!");
 		} catch (Exception e) {
-			e.printStackTrace();
+			throw new PersistenceException(e);
 		}
-		return null;
 	}
 	
 	@Override
-	public List findAll(Class clazz) {
+	public List findAll(Class clazz) throws PersistenceException {
 		try {
 			prepare = conn.prepareStatement(sqlUtil.sqlFindAll(clazz));
 			ResultSet resultSet = prepare.executeQuery();
@@ -121,9 +131,9 @@ public class SuperDAO implements ISuperDAO{
 			return list;
 		} catch (SQLException e) {
 			e.printStackTrace();
+			throw new PersistenceException(e,"Ocorreu uma falha ao executar o SQL!");
 		} catch (Exception e) {
-			e.printStackTrace();
+			throw new PersistenceException(e);
 		}
-		return null;
 	}
 }

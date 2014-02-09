@@ -56,4 +56,20 @@ public class ObjectReflectionUtil {
 		}
 		return value;
 	}
+	
+	public Object getValue(Object obj, String nameField)
+			throws SecurityException, NoSuchFieldException,
+			IllegalArgumentException, IllegalAccessException {
+		Class<?> clazz = obj.getClass();
+		while (!clazz.equals(Object.class)) {
+			for (Field field : clazz.getDeclaredFields()) {
+				if (field.getName().equalsIgnoreCase(nameField)) {
+					field.setAccessible(true);
+					return field.get(obj);
+				}
+			}
+			clazz = iteratorClazz(clazz);
+		}
+		return null;
+	}
 }

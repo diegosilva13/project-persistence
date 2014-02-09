@@ -3,9 +3,19 @@ package persistence;
 public class Funcionario {
 	private Integer id;
 	private String cpf;
+	private String nome;
 	private String rg;
 	private String endereco;
 	private String telefone;
+	
+	public String getNome() {
+		return nome;
+	}
+	
+	public void setNome(String nome) {
+		this.nome = nome;
+	}
+	
 	public Integer getId() {
 		return id;
 	}
