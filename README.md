@@ -14,7 +14,7 @@ Atenção:
   -----------------------------------------------------------
   Nome da classe ==> mesmo nome da tabela da base de dados
   
-  Nome dos atributos ==> mesmo nome da tabela.
+  Nome dos atributos ==> mesmo nome dos campos da tabela.
 
 --------------------------------------------------------------
 Tem alguma dúvida me mande um e-mail: brener.dev.tec@gmail.com
