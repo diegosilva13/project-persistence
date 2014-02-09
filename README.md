@@ -15,8 +15,8 @@ Atenção:
   Nome da classe ==> mesmo nome da tabela da base de dados
   
   Nome dos atributos ==> mesmo nome dos campos da tabela.
-
-  Atributo id obrigatório.  	
+  
+  O atributo id é obrigatório em todas as classes e no banco(Exceto para classes filhas).
 --------------------------------------------------------------
 Tem alguma dúvida me mande um e-mail: brener.dev.tec@gmail.com
 
