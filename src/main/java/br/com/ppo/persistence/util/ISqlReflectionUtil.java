@@ -3,7 +3,7 @@ package br.com.ppo.persistence.util;
 import br.com.ppo.persistence.exception.UtilException;
 
 
-public interface ISqlUtil{
+public interface ISqlReflectionUtil{
 	public String sqlSave(Object obj) throws UtilException;
 	public String sqlUpdate(Object obj) throws UtilException;
 	public String sqlFindById(Object obj, Object id);

@@ -7,7 +7,7 @@ import java.util.Collection;
 
 import br.com.ppo.persistence.exception.UtilException;
 
-public class SqlUtil implements ISqlUtil {
+public class SqlReflectionUtil implements ISqlReflectionUtil {
 
 	@Override
 	public String sqlSave(Object obj) throws UtilException {
