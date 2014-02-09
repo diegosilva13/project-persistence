@@ -20,7 +20,7 @@ Atenção:
   O atributo [ID] é obrigatório em todas as classes e no banco(Exceto para classes filhas).
   
 --------------------------------------------------------------
-Tem alguma dúvida me mande um e-mail: brener.dev.tec@gmail.com
+Tem alguma dúvida ou quer contribuir me mande um e-mail: brener.dev.tec@gmail.com
 
 
 
