@@ -13,6 +13,7 @@ Atenção:
   Para implementar um novo teste, segue as especificações:
   -----------------------------------------------------------
   Nome da classe ==> mesmo nome da tabela da base de dados
+  
   Nome dos atributos ==> mesmo nome da tabela.
 
 --------------------------------------------------------------
