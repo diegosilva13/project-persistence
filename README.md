@@ -16,6 +16,7 @@ Atenção:
   
   Nome dos atributos ==> mesmo nome dos campos da tabela.
 
+  Atributo id obrigatório.  	
 --------------------------------------------------------------
 Tem alguma dúvida me mande um e-mail: brener.dev.tec@gmail.com
 
