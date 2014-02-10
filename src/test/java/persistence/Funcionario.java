@@ -7,6 +7,15 @@ public class Funcionario {
 	private String rg;
 	private String endereco;
 	private String telefone;
+	private Setor setor;
+	
+	public Setor getSetor() {
+		return setor;
+	}
+	
+	public void setSetor(Setor setor) {
+		this.setor = setor;
+	}
 	
 	public String getNome() {
 		return nome;
