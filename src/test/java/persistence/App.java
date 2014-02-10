@@ -10,18 +10,19 @@ public class App {
 	/**
 	 * @param args
 	 */
+	@SuppressWarnings("unchecked")
 	public static void main(String[] args) {
 		Gerente gerente = new Gerente();
 		gerente.setNome("João Rafael");
 		gerente.setCpf("00000000");
 		gerente.setRg("000000000");
 		gerente.setTelefone("000000000");
-		gerente.setCodigo("3");
+		gerente.setCodigo("31");
+		gerente.setId(1);
 		
 		try {
 			SuperDAO dao = new SuperDAO();
-			gerente = (Gerente) dao.save(gerente);
-			
+			gerente = (Gerente) dao.update(gerente);
 			List<Gerente> list = dao.findAll(Gerente.class);
 			
 			for(Gerente g: list){

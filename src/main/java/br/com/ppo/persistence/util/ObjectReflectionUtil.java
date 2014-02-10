@@ -3,6 +3,7 @@ package br.com.ppo.persistence.util;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class ObjectReflectionUtil {
 
@@ -11,7 +12,7 @@ public class ObjectReflectionUtil {
 		return clazz.newInstance();
 	}
 
-	public List<String> fieldsName(Class<?> clazz) {
+	public List<String> fields(Class<?> clazz) {
 		List<String> fields = new ArrayList<>();
 		while (!clazz.equals(Object.class)) {
 			for (Field field : clazz.getDeclaredFields()) {
@@ -42,7 +43,7 @@ public class ObjectReflectionUtil {
 		return obj;
 	}
 
-	public Class<?> iteratorClazz(Class<?> clazz) {
+	private static Class<?> iteratorClazz(Class<?> clazz) {
 		return clazz.getSuperclass();
 	}
 
@@ -71,5 +72,16 @@ public class ObjectReflectionUtil {
 			clazz = iteratorClazz(clazz);
 		}
 		return null;
+	}
+	
+	public Object setAllValues(Map<String, Object> fieldAndValue, Class<?> clazz) throws InstantiationException, IllegalAccessException, NoSuchFieldException, SecurityException {
+		Object object = newInstance(clazz);
+		for(String name: fieldAndValue.keySet()){
+			Object value = fieldAndValue.get(name);
+			if(value != null){		
+				this.setValue(object, value, name);
+			}
+		}
+		return object;
 	}
 }

@@ -5,10 +5,13 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Collection;
 
+import br.com.ppo.persistence.exception.PersistenceException;
 import br.com.ppo.persistence.exception.UtilException;
 
 public class SqlReflectionUtil implements ISqlReflectionUtil {
 
+	ObjectReflectionUtil reflectionUtil = new ObjectReflectionUtil();
+	
 	@Override
 	public String sqlSave(Object obj) throws UtilException {
 		Class<?> clazz = obj.getClass();
@@ -59,7 +62,7 @@ public class SqlReflectionUtil implements ISqlReflectionUtil {
 	}
 
 	@Override
-	public String sqlUpdate(Object obj) throws UtilException {
+	public String sqlUpdate(Object obj) throws UtilException, PersistenceException {
 		Class<?> clazz = obj.getClass();
 		StringBuffer sql = new StringBuffer();
 		StringBuffer querys = new StringBuffer();
@@ -92,7 +95,10 @@ public class SqlReflectionUtil implements ISqlReflectionUtil {
 			sql.append(" WHERE id = :id");
 			sql.append(";");
 			querys.append(sql.toString());
-			return id != null ? querys.toString().replaceAll(":id", String.valueOf(id)) : null;
+			if(id == null){
+				throw new PersistenceException("O objeto não possui um [ID] para atualização.");
+			}
+			return querys.toString().replaceAll(":id", String.valueOf(id));
 		} catch (SecurityException e) {
 			e.printStackTrace();
 			throw new UtilException(e,"Ocorreu um erro inesperado.");
@@ -106,9 +112,9 @@ public class SqlReflectionUtil implements ISqlReflectionUtil {
 	}
 
 	@Override
-	public String sqlRemove(Object obj) throws IllegalArgumentException, IllegalAccessException{
+	public String sqlRemove(Object obj) throws IllegalArgumentException, IllegalAccessException, SecurityException, NoSuchFieldException{
 		StringBuffer sql = new StringBuffer();
-		Integer id = (Integer) this.getField(obj, "id");
+		Integer id = (Integer) reflectionUtil.getValue(obj, "id");
 		sql.append("DELETE FROM \"").append(obj.getClass().getSimpleName()+"\"");
 			if (id != null) {
 				sql.append(" WHERE ").append("id").append("=").append(id);
@@ -117,14 +123,14 @@ public class SqlReflectionUtil implements ISqlReflectionUtil {
 	}
 
 	@Override
-	public String sqlRemoveAll(Class<?> clazz) throws IllegalArgumentException, IllegalAccessException, InstantiationException {
+	public String sqlRemoveAll(Class<?> clazz) throws IllegalArgumentException, IllegalAccessException, InstantiationException, SecurityException, NoSuchFieldException {
 		return sqlRemove(clazz.newInstance());
 	}
 
 	@Override
-	public String sqlFindById(Object obj, Object id){
+	public String sqlFindById(Class<?> clazz, Object id){
 		StringBuffer sql = new StringBuffer();
-		sql.append("SELECT * FROM \"").append(obj.getClass().getSimpleName()+"\"");
+		sql.append("SELECT * FROM \"").append(clazz.getSimpleName()+"\"");
 		if (id != null) {
 			sql.append(" WHERE ").append("id").append("=").append(id);
 		}
@@ -133,7 +139,7 @@ public class SqlReflectionUtil implements ISqlReflectionUtil {
 
 	@Override
 	public String sqlFindAll(Class<?> clazz) throws InstantiationException, IllegalAccessException{
-			return sqlFindById(clazz.newInstance(),null);
+			return sqlFindById(clazz, null);
 	}
 	
 	private boolean isInstanceOfCollection(Object value) throws UtilException {
@@ -157,20 +163,6 @@ public class SqlReflectionUtil implements ISqlReflectionUtil {
 			return true;
 		}
 		return false;
-	}
-	
-	private Object getField(Object obj, String field) throws IllegalArgumentException, IllegalAccessException{
-		Class<?> clazz = obj.getClass();
-		while(!clazz.equals(Object.class)){
-			for(Field f :clazz.getDeclaredFields()){
-				if(f.getName().equalsIgnoreCase(field)){
-					f.setAccessible(true);
-					return f.get(obj);
-				}
-			}
-			clazz = clazz.getSuperclass();
-		}
-		return null;
 	}
 	
 	@Override
