@@ -9,15 +9,15 @@ import java.util.List;
 
 import br.com.ppo.persistence.database.Config;
 import br.com.ppo.persistence.exception.PersistenceException;
-import br.com.ppo.persistence.util.ISqlUtil;
+import br.com.ppo.persistence.util.ISqlReflectionUtil;
 import br.com.ppo.persistence.util.ObjectReflectionUtil;
-import br.com.ppo.persistence.util.SqlUtil;
+import br.com.ppo.persistence.util.SqlReflectionUtil;
 
 @SuppressWarnings("rawtypes")
 public class SuperDAO implements ISuperDAO{
 	
 	private Connection conn = null;
-	private ISqlUtil sqlUtil = new SqlUtil();
+	private ISqlReflectionUtil sqlUtil = new SqlReflectionUtil();
 	private ObjectReflectionUtil reflectionUtil = new ObjectReflectionUtil();
 	private PreparedStatement prepare;
 	
