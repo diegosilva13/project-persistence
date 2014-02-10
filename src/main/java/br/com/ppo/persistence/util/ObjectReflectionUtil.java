@@ -84,4 +84,39 @@ public class ObjectReflectionUtil {
 		}
 		return object;
 	}
+	
+	public Object newInstanceOfField(Class<?> clazz, String name) throws InstantiationException, IllegalAccessException{
+		while (!clazz.equals(Object.class)) {
+			for(Field field: clazz.getDeclaredFields()){
+				if(field.getName().equalsIgnoreCase(name)){
+					return newInstance(field.getType());
+				}
+				clazz = iteratorClazz(clazz);
+			}
+		}
+		return null;
+	}
+	
+	public boolean hasField(Class<?> clazz, String name){
+		for(Field field: clazz.getDeclaredFields()){
+			if(field.getName().equalsIgnoreCase(name)){
+				return true;
+			}
+		}
+		return false;
+	}
+
+	public boolean hasId(Class<?> clazz, String nameField) {
+		while (!clazz.equals(Object.class)) {
+			for(Field field: clazz.getDeclaredFields()){
+				if(field.getName().equalsIgnoreCase(nameField)){
+					if(this.hasField(field.getType(), "id")){
+						return true;
+					}
+				}
+			}
+			clazz = iteratorClazz(clazz);
+		}
+		return false;
+	}
 }

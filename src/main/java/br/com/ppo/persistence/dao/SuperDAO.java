@@ -57,7 +57,7 @@ public class SuperDAO implements ISuperDAO{
 			conn.rollback();
 		} catch (SQLException e) {
 			e.printStackTrace();
-			throw new PersistenceException(e,"Ocorreu uma falha ao executar o SQL!");
+			throw new PersistenceException(e,"Ocorreu uma falha ao executar o SQL.");
 		} catch (Exception e) {
 			throw new PersistenceException(e);
 		}
@@ -134,7 +134,12 @@ public class SuperDAO implements ISuperDAO{
 				Object obj = ObjectReflectionUtil.newInstance(clazz);
 				for(String nameField: fields){
 					Object value = resultSet.getObject(nameField.toLowerCase());
-					fieldValue.put(nameField, value);
+					Object association = this.findAssociacao(clazz, "id", value);
+					if(association != value){
+						fieldValue.put(nameField, association);
+					}else{
+						fieldValue.put(nameField, value);
+					}
 				}
 				obj = reflectionUtil.setAllValues(fieldValue, clazz);
 				objects.add(obj);
@@ -146,5 +151,19 @@ public class SuperDAO implements ISuperDAO{
 		} catch (Exception e) {
 			throw new PersistenceException(e);
 		}
+	}
+	
+	private Object findAssociacao(Class<?> clazz, String nameField, Object value) throws PersistenceException{
+		try {
+			if(reflectionUtil.hasId(clazz, nameField)){
+				Object obj = reflectionUtil.newInstanceOfField(clazz, nameField);
+				if(obj != null){
+					return this.findById(obj.getClass(), value);
+				}
+			}
+		} catch (Exception e) {
+			throw new PersistenceException(e);
+		}
+		return value;
 	}
 }
