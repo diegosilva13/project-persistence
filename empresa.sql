@@ -1,9 +1,25 @@
-﻿/*
+﻿
+-- Table: "Setor"
+
+-- DROP TABLE "Setor";
+
+CREATE TABLE "Setor"
+(
+  id bigserial NOT NULL,
+  nome character varying(128),
+  CONSTRAINT "Setor_pkey" PRIMARY KEY (id)
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE "Setor"
+  OWNER TO postgres;
+
+
+/*
 --Database empresa
 
---CREATE DATABASE "empresa";
-
-﻿-- Table: "Funcionario"
+-- Table: "Funcionario"
 
 -- DROP TABLE "Funcionario";
 */
@@ -15,8 +31,11 @@ CREATE TABLE "Funcionario"
   rg character varying(16),
   telefone character varying(24),
   endereco character varying(255),
+  setor bigint,
   CONSTRAINT "Funcionario_pkey" PRIMARY KEY (id),
-  CONSTRAINT "Funcionario_cpf_rg_key" UNIQUE (cpf, rg)
+  CONSTRAINT "Funcionario_setor_fkey" FOREIGN KEY (setor)
+      REFERENCES "Setor" (id) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION
 )
 WITH (
   OIDS=FALSE
