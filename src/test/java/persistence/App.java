@@ -19,9 +19,13 @@ public class App {
 		gerente.setTelefone("000000000");
 		gerente.setCodigo("31");
 		gerente.setId(1);
-		
+		Setor setor = new Setor();
+		setor.setNome("GERENCIA");
 		try {
 			SuperDAO dao = new SuperDAO();
+			setor = (Setor) dao.save(setor);
+			gerente = (Gerente) dao.update(gerente);
+			gerente.setSetor(setor);
 			gerente = (Gerente) dao.update(gerente);
 			List<Gerente> list = dao.findAll(Gerente.class);
 			
