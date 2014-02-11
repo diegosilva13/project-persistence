@@ -10,6 +10,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
+
 import br.com.ppo.persistence.database.Config;
 import br.com.ppo.persistence.exception.PersistenceException;
 import br.com.ppo.persistence.util.ISqlReflectionUtil;
@@ -20,10 +22,9 @@ import br.com.ppo.persistence.util.SqlReflectionUtil;
 public class SuperDAO implements ISuperDAO{
 	
 	private Connection conn = null;
-	private ISqlReflectionUtil sqlUtil = new SqlReflectionUtil();
+	private ISqlReflectionUtil sql = new SqlReflectionUtil();
 	private ObjectReflectionUtil reflectionUtil = new ObjectReflectionUtil();
 	private PreparedStatement prepare;
-	
 	public SuperDAO() throws PersistenceException{
 		this.conn = Config.startConection();
 	}
@@ -31,9 +32,9 @@ public class SuperDAO implements ISuperDAO{
 	@Override
 	public Object save(Object object) throws PersistenceException {
 		try {
-			prepare = conn.prepareStatement(sqlUtil.sqlSave(object));
+			prepare = conn.prepareStatement(sql.sqlSave(object));
 			if(!prepare.execute()){
-				ResultSet resultSet = conn.prepareStatement(sqlUtil.sqlSaveSucess(object)).executeQuery();
+				ResultSet resultSet = conn.prepareStatement(sql.sqlSaveSucess(object)).executeQuery();
 				if(resultSet.next()){
 					return this.findById(object.getClass(), resultSet.getObject(2).toString());
 				}
@@ -51,7 +52,7 @@ public class SuperDAO implements ISuperDAO{
 	@Override
 	public Object update(Object object) throws PersistenceException{
 		try {
-			prepare = conn.prepareStatement(sqlUtil.sqlUpdate(object));
+			prepare = conn.prepareStatement(sql.sqlUpdate(object));
 			if(!prepare.execute()){
 				return this.findById(object.getClass(), reflectionUtil.getValue(object, "id"));
 			}
@@ -68,7 +69,7 @@ public class SuperDAO implements ISuperDAO{
 	@Override
 	public Boolean remove(Object object) throws PersistenceException {
 		try {
-			prepare = conn.prepareStatement(sqlUtil.sqlRemove(object));
+			prepare = conn.prepareStatement(sql.sqlRemove(object));
 			if(!prepare.execute()){
 				return true;
 			}
@@ -85,7 +86,7 @@ public class SuperDAO implements ISuperDAO{
 	@Override
 	public Boolean removeAll(Object object) throws PersistenceException {
 		try {
-			prepare = conn.prepareStatement(sqlUtil.sqlRemoveAll(object.getClass()));
+			prepare = conn.prepareStatement(sql.sqlRemoveAll(object.getClass()));
 			if(!prepare.execute()){
 				return true;
 			}
@@ -102,7 +103,7 @@ public class SuperDAO implements ISuperDAO{
 	@Override
 	public Object findById(Class<?> clazz, Object id) throws PersistenceException {
 		try {
-			prepare = conn.prepareStatement(sqlUtil.sqlFindById(clazz, id));
+			prepare = conn.prepareStatement(sql.sqlFindById(clazz, id));
 			ResultSet resultSet = prepare.executeQuery();
 			List<Field> fields = reflectionUtil.fields(clazz);
 			Object obj = ObjectReflectionUtil.newInstance(clazz);
@@ -131,7 +132,7 @@ public class SuperDAO implements ISuperDAO{
 	@Override
 	public List findAll(Class clazz) throws PersistenceException {
 		try {
-			prepare = conn.prepareStatement(sqlUtil.sqlFindAll(clazz));
+			prepare = conn.prepareStatement(sql.sqlFindAll(clazz));
 			ResultSet resultSet = prepare.executeQuery();
 			List<Field> fields = reflectionUtil.fields(clazz);
 			Map<Field, Object> fieldValue = new HashMap<Field, Object>();
