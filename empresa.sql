@@ -15,11 +15,11 @@ WITH (
 ALTER TABLE "Unidade"
   OWNER TO postgres;
 
-
+/*
 -- Table: "Setor"
 
 -- DROP TABLE "Setor";
-
+*/
 CREATE TABLE "Setor"
 (
   id bigserial NOT NULL,
@@ -63,21 +63,22 @@ WITH (
 );
 ALTER TABLE "Funcionario"
   OWNER TO postgres;
-
+/*
 -- Table: "Gerente"
 
 -- DROP TABLE "Gerente";
-
+*/
 CREATE TABLE "Gerente"
 (
   id bigserial NOT NULL,
+-- Inherited from table "Funcionario":  nome character varying(255),
 -- Inherited from table "Funcionario":  cpf character varying(16),
 -- Inherited from table "Funcionario":  rg character varying(16),
 -- Inherited from table "Funcionario":  telefone character varying(24),
 -- Inherited from table "Funcionario":  endereco character varying(255),
+-- Inherited from table "Funcionario":  setor bigint,
   codigo character varying(32),
-  CONSTRAINT "Gerente_pkey" PRIMARY KEY (id),
-  CONSTRAINT "Gerente_codigo_key" UNIQUE (codigo)
+  CONSTRAINT "Gerente_pkey" PRIMARY KEY (id)
 )
 INHERITS ("Funcionario")
 WITH (
