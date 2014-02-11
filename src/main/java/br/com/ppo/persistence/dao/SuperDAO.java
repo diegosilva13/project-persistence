@@ -10,8 +10,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.log4j.Logger;
-
 import br.com.ppo.persistence.database.Config;
 import br.com.ppo.persistence.exception.PersistenceException;
 import br.com.ppo.persistence.util.ISqlReflectionUtil;
