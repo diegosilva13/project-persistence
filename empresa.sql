@@ -1,7 +1,8 @@
-﻿-- Table: "Unidade"
+﻿/*
+﻿--Table: "Unidade"
 
 -- DROP TABLE "Unidade";
-
+*/
 CREATE TABLE "Unidade"
 (
   id bigserial NOT NULL,
