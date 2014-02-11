@@ -1,4 +1,20 @@
-﻿
+﻿-- Table: "Unidade"
+
+-- DROP TABLE "Unidade";
+
+CREATE TABLE "Unidade"
+(
+  id bigserial NOT NULL,
+  numero bigint,
+  CONSTRAINT "Unidade_pkey" PRIMARY KEY (id)
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE "Unidade"
+  OWNER TO postgres;
+
+
 -- Table: "Setor"
 
 -- DROP TABLE "Setor";
@@ -7,7 +23,11 @@ CREATE TABLE "Setor"
 (
   id bigserial NOT NULL,
   nome character varying(128),
-  CONSTRAINT "Setor_pkey" PRIMARY KEY (id)
+  unidade bigint,
+  CONSTRAINT "Setor_pkey" PRIMARY KEY (id),
+  CONSTRAINT "Setor_unidade_fkey" FOREIGN KEY (unidade)
+      REFERENCES "Unidade" (id) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION
 )
 WITH (
   OIDS=FALSE

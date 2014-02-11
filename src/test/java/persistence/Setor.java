@@ -1,9 +1,9 @@
 package persistence;
 
 public class Setor {
-	public Integer id;
-	public String nome;
-	
+	private Integer id;
+	private String nome;
+	private Unidade unidade;
 	public void setId(Integer id) {
 		this.id = id;
 	}
@@ -18,5 +18,13 @@ public class Setor {
 	
 	public void setNome(String nome) {
 		this.nome = nome;
+	}
+	
+	public Unidade getUnidade() {
+		return unidade;
+	}
+	
+	public void setUnidade(Unidade unidade) {
+		this.unidade = unidade;
 	}
 }

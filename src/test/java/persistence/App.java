@@ -13,26 +13,31 @@ public class App {
 	@SuppressWarnings("unchecked")
 	public static void main(String[] args) {
 		Gerente gerente = new Gerente();
-		gerente.setNome("João Rafael");
-		gerente.setCpf("00000000");
-		gerente.setRg("000000000");
-		gerente.setTelefone("000000000");
-		gerente.setCodigo("31");
-		gerente.setId(1);
+		gerente.setNome("Gran Fina1li");
+		gerente.setCpf("000-000-010-10");
+		gerente.setRg("000.000.001");
+		gerente.setTelefone("(00)00100-0001");
+		gerente.setCodigo("21");
 		Setor setor = new Setor();
-		setor.setNome("GERENCIA");
+		setor.setNome("GERENC1IA");
+		Unidade unidade = new Unidade();
+		unidade.setNumero(1314);
 		try {
 			SuperDAO dao = new SuperDAO();
+			/*unidade = (Unidade) dao.save(unidade);
+			setor.setUnidade(unidade);
 			setor = (Setor) dao.save(setor);
-			gerente = (Gerente) dao.update(gerente);
 			gerente.setSetor(setor);
-			gerente = (Gerente) dao.update(gerente);
+			gerente = (Gerente) dao.save(gerente);
 			List<Gerente> list = dao.findAll(Gerente.class);
 			
 			for(Gerente g: list){
+				System.out.println("--------------REGISTROS-------------------");
 				System.out.println(g.getNome());
-			}
-			
+				System.out.println(g.getSetor().getNome());
+				System.out.println(g.getSetor().getUnidade().getNumero());
+			}*/
+			System.out.println(((Unidade)dao.findById(Unidade.class, 1)).getNumero());
 		} catch (PersistenceException e) {
 			e.printStackTrace();
 		}

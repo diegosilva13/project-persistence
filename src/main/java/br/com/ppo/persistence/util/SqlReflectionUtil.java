@@ -13,7 +13,7 @@ public class SqlReflectionUtil implements ISqlReflectionUtil {
 	ObjectReflectionUtil reflectionUtil = new ObjectReflectionUtil();
 	
 	@Override
-	public String sqlSave(Object obj) throws UtilException {
+	public String sqlSave(Object obj) throws UtilException, SecurityException, NoSuchFieldException {
 		Class<?> clazz = obj.getClass();
 		StringBuffer querys = new StringBuffer();
 		StringBuffer sqlParte1 = new StringBuffer();
@@ -27,6 +27,7 @@ public class SqlReflectionUtil implements ISqlReflectionUtil {
 					Object value = field.get(obj);
 					if (value != null && !this.isInstanceOfCollection(value)
 							&& !field.getName().equalsIgnoreCase("id")) {
+						value = this.checkIdOfObject(value);
 						sqlParte1.append(field.getName());
 						if (this.isNumeric(value)) {
 							sqlParte2.append(value.toString());
@@ -62,7 +63,7 @@ public class SqlReflectionUtil implements ISqlReflectionUtil {
 	}
 
 	@Override
-	public String sqlUpdate(Object obj) throws UtilException, PersistenceException {
+	public String sqlUpdate(Object obj) throws UtilException, PersistenceException, NoSuchFieldException {
 		Class<?> clazz = obj.getClass();
 		StringBuffer sql = new StringBuffer();
 		StringBuffer querys = new StringBuffer();
@@ -77,6 +78,7 @@ public class SqlReflectionUtil implements ISqlReflectionUtil {
 					Object value = field.get(obj);
 					if (value != null && !this.isInstanceOfCollection(value)
 							&& !field.getName().equalsIgnoreCase("id")) {
+						value = this.checkIdOfObject(value);
 						if (this.isNumeric(value)) {
 							sql.append(field.getName()).append("=")
 									.append(value.toString());
@@ -168,5 +170,12 @@ public class SqlReflectionUtil implements ISqlReflectionUtil {
 	@Override
 	public String sqlSaveSucess(Object obj){
 		return "SELECT * FROM \""+obj.getClass().getSimpleName()+"_id_seq\"";
+	}
+	
+	public Object checkIdOfObject(Object value) throws SecurityException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException{
+		if(reflectionUtil.hasField(value.getClass(), "id")){
+			value = reflectionUtil.getValue(value, "id");
+		}
+		return value;
 	}
 }

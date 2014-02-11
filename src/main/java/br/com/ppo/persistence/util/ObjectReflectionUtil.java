@@ -31,9 +31,7 @@ public class ObjectReflectionUtil {
 			for (Field field : clazz.getDeclaredFields()) {
 				if (field.getName().equalsIgnoreCase(nameField)) {
 					field.setAccessible(true);
-					if(field.getName().equalsIgnoreCase("id")){
-						value = this.convertId(field, value);
-					}
+					value = this.convertObject(field, value);
 					field.set(obj, value);
 					return obj;
 				}
@@ -47,7 +45,7 @@ public class ObjectReflectionUtil {
 		return clazz.getSuperclass();
 	}
 
-	public Object convertId(Field field, Object value) {
+	public Object convertObject(Field field, Object value) {
 		if(!field.getType().equals(value.getClass())){
 			if(value instanceof Integer && field.getType().equals(Long.class)){
 				return Long.parseLong(String.valueOf(value));
@@ -78,6 +76,7 @@ public class ObjectReflectionUtil {
 		Object object = newInstance(clazz);
 		for(String name: fieldAndValue.keySet()){
 			Object value = fieldAndValue.get(name);
+			
 			if(value != null){		
 				this.setValue(object, value, name);
 			}
@@ -91,8 +90,8 @@ public class ObjectReflectionUtil {
 				if(field.getName().equalsIgnoreCase(name)){
 					return newInstance(field.getType());
 				}
-				clazz = iteratorClazz(clazz);
 			}
+			clazz = iteratorClazz(clazz);
 		}
 		return null;
 	}

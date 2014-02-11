@@ -109,7 +109,12 @@ public class SuperDAO implements ISuperDAO{
 			if(resultSet.next()){
 				for(String name: fields){
 					Object value = resultSet.getObject(name.toLowerCase());
-					fieldValue.put(name, value);
+					Object association = this.findAssociacao(clazz, name, value);
+					if(association != value){
+						fieldValue.put(name, association);
+					}else{
+						fieldValue.put(name, value);
+					}
 				}
 				obj = reflectionUtil.setAllValues(fieldValue, clazz);
 			}
@@ -134,7 +139,7 @@ public class SuperDAO implements ISuperDAO{
 				Object obj = ObjectReflectionUtil.newInstance(clazz);
 				for(String nameField: fields){
 					Object value = resultSet.getObject(nameField.toLowerCase());
-					Object association = this.findAssociacao(clazz, "id", value);
+					Object association = this.findAssociacao(clazz, nameField, value);
 					if(association != value){
 						fieldValue.put(nameField, association);
 					}else{
