@@ -12,11 +12,11 @@ public class ObjectReflectionUtil {
 		return clazz.newInstance();
 	}
 
-	public List<String> fields(Class<?> clazz) {
-		List<String> fields = new ArrayList<>();
+	public List<Field> fields(Class<?> clazz) {
+		List<Field> fields = new ArrayList<>();
 		while (!clazz.equals(Object.class)) {
 			for (Field field : clazz.getDeclaredFields()) {
-				fields.add(field.getName());
+				fields.add(field);
 			}
 			clazz = iteratorClazz(clazz);
 		}
@@ -72,13 +72,14 @@ public class ObjectReflectionUtil {
 		return null;
 	}
 	
-	public Object setAllValues(Map<String, Object> fieldAndValue, Class<?> clazz) throws InstantiationException, IllegalAccessException, NoSuchFieldException, SecurityException {
+	public Object setAllValues(Map<Field, Object> fieldAndValue, Class<?> clazz) throws InstantiationException, IllegalAccessException, NoSuchFieldException, SecurityException {
 		Object object = newInstance(clazz);
-		for(String name: fieldAndValue.keySet()){
-			Object value = fieldAndValue.get(name);
-			
-			if(value != null){		
-				this.setValue(object, value, name);
+		for(Field field: fieldAndValue.keySet()){
+			Object value = fieldAndValue.get(field);
+			if(value != null){
+				value = this.convertObject(field, value);
+				field.setAccessible(true);
+				field.set(object, value);
 			}
 		}
 		return object;
@@ -97,21 +98,10 @@ public class ObjectReflectionUtil {
 	}
 	
 	public boolean hasField(Class<?> clazz, String name){
-		for(Field field: clazz.getDeclaredFields()){
-			if(field.getName().equalsIgnoreCase(name)){
-				return true;
-			}
-		}
-		return false;
-	}
-
-	public boolean hasId(Class<?> clazz, String nameField) {
 		while (!clazz.equals(Object.class)) {
 			for(Field field: clazz.getDeclaredFields()){
-				if(field.getName().equalsIgnoreCase(nameField)){
-					if(this.hasField(field.getType(), "id")){
-						return true;
-					}
+				if(field.getName().equalsIgnoreCase(name)){
+					return true;
 				}
 			}
 			clazz = iteratorClazz(clazz);

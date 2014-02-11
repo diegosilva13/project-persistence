@@ -1,7 +1,5 @@
 package persistence;
 
-import java.util.List;
-
 import br.com.ppo.persistence.dao.SuperDAO;
 import br.com.ppo.persistence.exception.PersistenceException;
 
@@ -10,7 +8,6 @@ public class App {
 	/**
 	 * @param args
 	 */
-	@SuppressWarnings("unchecked")
 	public static void main(String[] args) {
 		Gerente gerente = new Gerente();
 		gerente.setNome("Gran Finali 2");
@@ -32,7 +29,14 @@ public class App {
 //			gerente = (Gerente) dao.save(gerente);
 //			List<Gerente> list = dao.findAll(Gerente.class);
 			
-			
+			unidade = (Unidade) dao.save(unidade);
+			Setor setor2 = new Setor();
+			setor2.setUnidade(unidade);
+			unidade = (Unidade) dao.save(unidade);
+			setor2 = (Setor) dao.save(setor2);
+			gerente.setSetor(setor2);
+			gerente = (Gerente) dao.save(gerente);
+			System.out.println(gerente.getSetor());
 			
 		} catch (PersistenceException e) {
 			e.printStackTrace();

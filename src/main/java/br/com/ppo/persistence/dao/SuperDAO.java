@@ -1,5 +1,6 @@
 package br.com.ppo.persistence.dao;
 
+import java.lang.reflect.Field;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -103,17 +104,17 @@ public class SuperDAO implements ISuperDAO{
 		try {
 			prepare = conn.prepareStatement(sqlUtil.sqlFindById(clazz, id));
 			ResultSet resultSet = prepare.executeQuery();
-			List<String> fields = reflectionUtil.fields(clazz);
+			List<Field> fields = reflectionUtil.fields(clazz);
 			Object obj = ObjectReflectionUtil.newInstance(clazz);
-			Map<String, Object> fieldValue = new HashMap<String, Object>();
+			Map<Field, Object> fieldValue = new HashMap<Field, Object>();
 			if(resultSet.next()){
-				for(String name: fields){
-					Object value = resultSet.getObject(name.toLowerCase());
-					Object association = this.findAssociacao(clazz, name, value);
+				for(Field field: fields){
+					Object value = resultSet.getObject(field.getName().toLowerCase());
+					Object association = this.findAssociacao(field.getType(), value);
 					if(association != value){
-						fieldValue.put(name, association);
+						fieldValue.put(field, association);
 					}else{
-						fieldValue.put(name, value);
+						fieldValue.put(field, value);
 					}
 				}
 				obj = reflectionUtil.setAllValues(fieldValue, clazz);
@@ -132,18 +133,18 @@ public class SuperDAO implements ISuperDAO{
 		try {
 			prepare = conn.prepareStatement(sqlUtil.sqlFindAll(clazz));
 			ResultSet resultSet = prepare.executeQuery();
-			List<String> fields = reflectionUtil.fields(clazz);
-			Map<String, Object> fieldValue = new HashMap<String, Object>();
+			List<Field> fields = reflectionUtil.fields(clazz);
+			Map<Field, Object> fieldValue = new HashMap<Field, Object>();
 			List<Object> objects = new ArrayList<>();
 			while(resultSet.next()){
 				Object obj = ObjectReflectionUtil.newInstance(clazz);
-				for(String nameField: fields){
-					Object value = resultSet.getObject(nameField.toLowerCase());
-					Object association = this.findAssociacao(clazz, nameField, value);
+				for(Field field: fields){
+					Object value = resultSet.getObject(field.getName().toLowerCase());
+					Object association = this.findAssociacao(field.getType(), value);
 					if(association != value){
-						fieldValue.put(nameField, association);
+						fieldValue.put(field, association);
 					}else{
-						fieldValue.put(nameField, value);
+						fieldValue.put(field, value);
 					}
 				}
 				obj = reflectionUtil.setAllValues(fieldValue, clazz);
@@ -158,10 +159,10 @@ public class SuperDAO implements ISuperDAO{
 		}
 	}
 	
-	private Object findAssociacao(Class<?> clazz, String nameField, Object value) throws PersistenceException{
+	private Object findAssociacao(Class<?> clazz, Object value) throws PersistenceException{
 		try {
-			if(reflectionUtil.hasId(clazz, nameField)){
-				Object obj = reflectionUtil.newInstanceOfField(clazz, nameField);
+			if(reflectionUtil.hasField(clazz, "id")){
+				Object obj = ObjectReflectionUtil.newInstance(clazz);
 				if(obj != null){
 					return this.findById(obj.getClass(), value);
 				}

@@ -27,7 +27,7 @@ public class SqlReflectionUtil implements ISqlReflectionUtil {
 					Object value = field.get(obj);
 					if (value != null && !this.isInstanceOfCollection(value)
 							&& !field.getName().equalsIgnoreCase("id")) {
-						value = this.checkIdOfObject(value);
+						value = this.findIdFromObject(value);
 						sqlParte1.append(field.getName());
 						if (this.isNumeric(value)) {
 							sqlParte2.append(value.toString());
@@ -78,7 +78,7 @@ public class SqlReflectionUtil implements ISqlReflectionUtil {
 					Object value = field.get(obj);
 					if (value != null && !this.isInstanceOfCollection(value)
 							&& !field.getName().equalsIgnoreCase("id")) {
-						value = this.checkIdOfObject(value);
+						value = this.findIdFromObject(value);
 						if (this.isNumeric(value)) {
 							sql.append(field.getName()).append("=")
 									.append(value.toString());
@@ -172,7 +172,7 @@ public class SqlReflectionUtil implements ISqlReflectionUtil {
 		return "SELECT * FROM \""+obj.getClass().getSimpleName()+"_id_seq\"";
 	}
 	
-	public Object checkIdOfObject(Object value) throws SecurityException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException{
+	public Object findIdFromObject(Object value) throws SecurityException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException{
 		if(reflectionUtil.hasField(value.getClass(), "id")){
 			value = reflectionUtil.getValue(value, "id");
 		}
