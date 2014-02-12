@@ -1,14 +1,12 @@
 package br.com.ppo.persistence.entity;
 
-import java.io.Serializable;
 
-public class BaseEntity implements IBaseEntity, Serializable{
+public class BaseEntity implements IBaseEntity{
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	
 	protected Integer id;
 	
 	public Integer getId() {

@@ -1,6 +1,11 @@
 package persistence;
 
 public class Gerente extends Funcionario {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	
 	private String codigo;
 	
 	public String getCodigo() {

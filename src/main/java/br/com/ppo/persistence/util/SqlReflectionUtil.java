@@ -26,7 +26,7 @@ public class SqlReflectionUtil implements ISqlReflectionUtil {
 					field.setAccessible(true);
 					Object value = field.get(obj);
 					if (value != null && !this.isInstanceOfCollection(value)
-							&& !field.getName().equalsIgnoreCase("id")) {
+							&& !field.getName().equalsIgnoreCase("id") && !field.getName().equalsIgnoreCase("serialversionuid")) {
 						value = this.findIdFromObject(value);
 						sqlParte1.append(field.getName());
 						if (this.isNumeric(value)) {
@@ -77,7 +77,7 @@ public class SqlReflectionUtil implements ISqlReflectionUtil {
 					field.setAccessible(true);
 					Object value = field.get(obj);
 					if (value != null && !this.isInstanceOfCollection(value)
-							&& !field.getName().equalsIgnoreCase("id")) {
+							&& !field.getName().equalsIgnoreCase("id") && !field.getName().equalsIgnoreCase("serialversionuid")) {
 						value = this.findIdFromObject(value);
 						if (this.isNumeric(value)) {
 							sql.append(field.getName()).append("=")

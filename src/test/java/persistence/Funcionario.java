@@ -1,7 +1,12 @@
 package persistence;
 
-public class Funcionario {
-	private Integer id;
+import br.com.ppo.persistence.entity.BaseEntity;
+
+public class Funcionario extends BaseEntity{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private String cpf;
 	private String nome;
 	private String rg;
@@ -25,12 +30,6 @@ public class Funcionario {
 		this.nome = nome;
 	}
 	
-	public Integer getId() {
-		return id;
-	}
-	public void setId(Integer id) {
-		this.id = id;
-	}
 	public String getCpf() {
 		return cpf;
 	}

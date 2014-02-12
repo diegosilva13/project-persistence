@@ -1,16 +1,15 @@
 package persistence;
 
-public class Unidade {
-	private Integer id;
+import br.com.ppo.persistence.entity.BaseEntity;
+
+public class Unidade extends BaseEntity{
+	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	
 	private Integer numero;
-	
-	public Integer getId() {
-		return id;
-	}
-	
-	public void setId(Integer id) {
-		this.id = id;
-	}
 	
 	public Integer getNumero() {
 		return numero;

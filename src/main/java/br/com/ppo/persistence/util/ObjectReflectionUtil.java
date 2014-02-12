@@ -16,7 +16,9 @@ public class ObjectReflectionUtil {
 		List<Field> fields = new ArrayList<>();
 		while (!clazz.equals(Object.class)) {
 			for (Field field : clazz.getDeclaredFields()) {
-				fields.add(field);
+				if(!field.getName().equalsIgnoreCase("serialversionuid")){
+					fields.add(field);
+				}
 			}
 			clazz = iteratorClazz(clazz);
 		}

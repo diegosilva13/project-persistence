@@ -1,5 +1,6 @@
 package persistence;
 
+import br.com.ppo.persistence.dao.BaseDAO;
 import br.com.ppo.persistence.dao.SuperDAO;
 import br.com.ppo.persistence.exception.PersistenceException;
 
@@ -20,24 +21,19 @@ public class App {
 		Unidade unidade = new Unidade();
 		unidade.setNumero(7);
 	
-		try {
-			SuperDAO dao = new SuperDAO();
+		BaseDAO dao = new BaseDAO();
 //			unidade = (Unidade) dao.save(unidade);
 //			setor.setUnidade(unidade);
 //			setor = (Setor) dao.save(setor);
 //			gerente.setSetor(setor);
 //			gerente = (Gerente) dao.save(gerente);
 //			List<Gerente> list = dao.findAll(Gerente.class);
+		
+		try {
+			gerente = dao.save(gerente);
+			setor = dao.save(setor);
 			
-			unidade = (Unidade) dao.save(unidade);
-			Setor setor2 = new Setor();
-			setor2.setUnidade(unidade);
-			unidade = (Unidade) dao.save(unidade);
-			setor2 = (Setor) dao.save(setor2);
-			gerente.setSetor(setor2);
-			gerente = (Gerente) dao.save(gerente);
-			System.out.println(gerente.getSetor());
-			
+			System.out.println(dao.findAll(Gerente.class).size());
 		} catch (PersistenceException e) {
 			e.printStackTrace();
 		}

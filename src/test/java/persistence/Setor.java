@@ -1,16 +1,16 @@
 package persistence;
 
-public class Setor {
-	private Integer id;
+import br.com.ppo.persistence.entity.BaseEntity;
+
+public class Setor extends BaseEntity{
+	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	
 	private String nome;
 	private Unidade unidade;
-	public void setId(Integer id) {
-		this.id = id;
-	}
-	
-	public Integer getId() {
-		return id;
-	}
 	
 	public String getNome() {
 		return nome;
@@ -27,4 +27,5 @@ public class Setor {
 	public void setUnidade(Unidade unidade) {
 		this.unidade = unidade;
 	}
+
 }
