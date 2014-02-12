@@ -165,11 +165,11 @@ public class SuperDAO implements ISuperDAO{
 			if(reflectionUtil.hasField(clazz, "id")){
 				Object obj = ObjectReflectionUtil.newInstance(clazz);
 				List<Field> fields = reflectionUtil.fields(clazz);
-//				for(Field field: fields){
-//					if(field.getType().equals(evictLoop)){
-//						return value;
-//					}
-//				}
+				for(Field field: fields){
+					if(field.getType().equals(evictLoop)){
+						return value;
+					}
+				}
 				if(obj != null){
 					return this.findById(obj.getClass(), value);
 				}
