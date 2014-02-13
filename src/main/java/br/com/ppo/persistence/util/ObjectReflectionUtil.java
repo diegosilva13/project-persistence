@@ -87,6 +87,19 @@ public class ObjectReflectionUtil {
 		return object;
 	}
 	
+	public Object setAllValuesIgnoringClasses(Map<Field, Object> fieldAndValue, Class<?> clazz) throws InstantiationException, IllegalAccessException, NoSuchFieldException, SecurityException {
+		Object object = newInstance(clazz);
+		for(Field field: fieldAndValue.keySet()){
+			Object value = fieldAndValue.get(field);
+			if(value != null){
+				value = this.convertObject(field, value);
+				field.setAccessible(true);
+				field.set(object, value);
+			}
+		}
+		return object;
+	}
+	
 	public Object newInstanceOfField(Class<?> clazz, String name) throws InstantiationException, IllegalAccessException{
 		while (!clazz.equals(Object.class)) {
 			for(Field field: clazz.getDeclaredFields()){

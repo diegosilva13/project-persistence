@@ -159,18 +159,40 @@ public class SuperDAO implements ISuperDAO{
 		}
 	}
 	
+	private boolean isOther(Class<?> clazz, Object id) throws PersistenceException{
+		try {
+			prepare = conn.prepareStatement(sql.sqlFindById(clazz, id));
+			ResultSet resultSet = prepare.executeQuery();
+			List<Field> fields = reflectionUtil.fields(clazz);
+			Object obj = ObjectReflectionUtil.newInstance(clazz);
+			Map<Field, Object> fieldValue = new HashMap<Field, Object>();
+			if(resultSet.next()){
+				for(Field f: fields){
+					Object value = resultSet.getObject(f.getName().toLowerCase());
+					fieldValue.put(f, value);
+				}
+				obj = reflectionUtil.setAllValuesIgnoringClasses(fieldValue, clazz);
+			}
+			System.out.println(reflectionUtil.getValue(obj, "id") + " == " + id);
+			if(reflectionUtil.getValue(obj, "id") == id){
+				return false;
+			}
+			
+			return true;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new PersistenceException(e,"Ocorreu uma falha ao executar o SQL!");
+		} catch (Exception e) {
+			throw new PersistenceException(e);
+		}
+	}
+	
 	private Object findAssociacao(Class<?> clazz, Object value, Class<?> evictLoop) throws PersistenceException{
 		try {
 			
 			if(reflectionUtil.hasField(clazz, "id")){
 				Object obj = ObjectReflectionUtil.newInstance(clazz);
-				List<Field> fields = reflectionUtil.fields(clazz);
-				for(Field field: fields){
-					if(field.getType().equals(evictLoop)){
-						return value;
-					}
-				}
-				if(obj != null){
+				if(obj != null && this.isOther(clazz, value)){
 					return this.findById(obj.getClass(), value);
 				}
 			}
