@@ -11,6 +11,7 @@ public class Setor extends BaseEntity{
 	
 	private String nome;
 	private Unidade unidade;
+	private Funcionario secretario;
 	
 	public String getNome() {
 		return nome;
@@ -26,6 +27,14 @@ public class Setor extends BaseEntity{
 	
 	public void setUnidade(Unidade unidade) {
 		this.unidade = unidade;
+	}
+
+	public Funcionario getSecretario() {
+		return secretario;
+	}
+
+	public void setSecretario(Funcionario secretario) {
+		this.secretario = secretario;
 	}
 
 }

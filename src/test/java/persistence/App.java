@@ -30,8 +30,11 @@ public class App {
 //			List<Gerente> list = dao.findAll(Gerente.class);
 		
 		try {
-			gerente = dao.save(gerente);
-			setor = dao.save(setor);
+			Funcionario f = new Funcionario();
+			Setor s1 = new Setor();
+			
+			s1.setSecretario(f);
+			f.setSetor(setor);
 			
 			System.out.println(dao.findAll(Gerente.class).size());
 		} catch (PersistenceException e) {
