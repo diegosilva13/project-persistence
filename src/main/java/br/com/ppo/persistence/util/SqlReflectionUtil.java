@@ -5,6 +5,7 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Collection;
 
+import javassist.NotFoundException;
 import br.com.ppo.persistence.exception.PersistenceException;
 import br.com.ppo.persistence.exception.UtilException;
 
@@ -29,10 +30,12 @@ public class SqlReflectionUtil implements ISqlReflectionUtil {
 							&& !field.getName().equalsIgnoreCase("id") && !field.getName().equalsIgnoreCase("serialversionuid")) {
 						value = this.findIdFromObject(value);
 						sqlParte1.append(field.getName());
-						if (this.isNumeric(value)) {
-							sqlParte2.append(value.toString());
-						} else {
-							sqlParte2.append("'" + value.toString() + "'");
+						if(value != null){
+							if (this.isNumeric(value)) {
+								sqlParte2.append(value.toString());
+							} else {
+								sqlParte2.append("'" + value.toString() + "'");
+							}
 						}
 						sqlParte1.append(",");
 						sqlParte2.append(",");
@@ -48,6 +51,7 @@ public class SqlReflectionUtil implements ISqlReflectionUtil {
 			e.printStackTrace();
 			throw new UtilException(e,"Ocorreu um erro inesperado.");
 		}
+		System.out.println("Gerado o sql do método SQLSAVE: "+querys.toString());
 		return querys.toString();
 	}
 
@@ -79,14 +83,16 @@ public class SqlReflectionUtil implements ISqlReflectionUtil {
 					if (value != null && !this.isInstanceOfCollection(value)
 							&& !field.getName().equalsIgnoreCase("id") && !field.getName().equalsIgnoreCase("serialversionuid")) {
 						value = this.findIdFromObject(value);
-						if (this.isNumeric(value)) {
-							sql.append(field.getName()).append("=")
-									.append(value.toString());
-						} else {
-							sql.append(field.getName()).append("=").append("'")
-									.append(value.toString()).append("'");
+						if(value != null){
+							if (this.isNumeric(value)) {
+								sql.append(field.getName()).append("=")
+										.append(value.toString());
+							} else {
+								sql.append(field.getName()).append("=").append("'")
+										.append(value.toString()).append("'");
+							}
+							sql.append(",");
 						}
-						sql.append(",");
 					} else if (field.getName().equalsIgnoreCase("id")) {
 						id = value != null ? (Integer) value : id;
 					}
@@ -100,7 +106,9 @@ public class SqlReflectionUtil implements ISqlReflectionUtil {
 			if(id == null){
 				throw new PersistenceException("O objeto não possui um [ID] para atualização.");
 			}
-			return querys.toString().replaceAll(":id", String.valueOf(id));
+			String queryString = querys.toString().replaceAll(":id", String.valueOf(id));
+			System.out.println("Gerado o sql do método SQLUPDATE: "+queryString);
+			return queryString;
 		} catch (SecurityException e) {
 			e.printStackTrace();
 			throw new UtilException(e,"Ocorreu um erro inesperado.");
@@ -136,9 +144,24 @@ public class SqlReflectionUtil implements ISqlReflectionUtil {
 		if (id != null) {
 			sql.append(" WHERE ").append("id").append("=").append(id);
 		}
+		System.out.println(sql.toString());
 		return sql.toString();
 	}
-
+	
+	@Override
+	public String sqlFindByFieldAndValue(Class<?> clazz, String field, Object value) throws NotFoundException{
+		if(field == null){
+			throw new NotFoundException("O valor de pesquisa [FIELD] está nulo: "+field);
+		}else if(value == null){
+			throw new NotFoundException("O valor de pesquisa [VALUE] está nulo: "+value);
+		}
+		StringBuffer sql = new StringBuffer();
+		sql.append("SELECT * FROM \"").append(clazz.getSimpleName()+"\"");
+		sql.append(" WHERE ").append(field).append("=").append(value);
+		System.out.println(sql.toString());
+		return sql.toString();
+	}
+	
 	@Override
 	public String sqlFindAll(Class<?> clazz) throws InstantiationException, IllegalAccessException{
 			return sqlFindById(clazz, null);

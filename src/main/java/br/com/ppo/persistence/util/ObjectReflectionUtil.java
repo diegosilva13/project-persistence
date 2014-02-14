@@ -91,7 +91,7 @@ public class ObjectReflectionUtil {
 		Object object = newInstance(clazz);
 		for(Field field: fieldAndValue.keySet()){
 			Object value = fieldAndValue.get(field);
-			if(value != null && !hasField(object.getClass(), "id")){
+			if(value != null && field.getType().equals(value.getClass())){
 				value = this.convertObject(field, value);
 				field.setAccessible(true);
 				field.set(object, value);

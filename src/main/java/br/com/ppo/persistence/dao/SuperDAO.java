@@ -10,6 +10,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
+
 import br.com.ppo.persistence.database.Config;
 import br.com.ppo.persistence.exception.PersistenceException;
 import br.com.ppo.persistence.util.ISqlReflectionUtil;
@@ -23,6 +25,11 @@ public class SuperDAO implements ISuperDAO{
 	private ISqlReflectionUtil sql = new SqlReflectionUtil();
 	private ObjectReflectionUtil reflectionUtil = new ObjectReflectionUtil();
 	private PreparedStatement prepare;
+	private Logger logger = Logger.getLogger(SuperDAO.class);
+	private Object objectTemp = new Object();
+	
+	
+	
 	public SuperDAO() throws PersistenceException{
 		this.conn = Config.startConection();
 	}
@@ -31,7 +38,6 @@ public class SuperDAO implements ISuperDAO{
 	public Object save(Object object) throws PersistenceException {
 		try {
 			prepare = conn.prepareStatement(sql.sqlSave(object));
-			System.out.println(sql.sqlSave(object));
 			if(!prepare.execute()){
 				ResultSet resultSet = conn.prepareStatement(sql.sqlSaveSucess(object)).executeQuery();
 				if(resultSet.next()){
@@ -40,6 +46,7 @@ public class SuperDAO implements ISuperDAO{
 			}
 			conn.rollback();
 		} catch (SQLException e) {
+			logger.debug(e);
 			e.printStackTrace();
 			throw new PersistenceException(e,"Ocorreu uma falha ao executar o SQL!");
 		} catch (Exception e) {
@@ -110,7 +117,7 @@ public class SuperDAO implements ISuperDAO{
 			if(resultSet.next()){
 				for(Field field: fields){
 					Object value = resultSet.getObject(field.getName().toLowerCase());
-					Object association = this.findAssociacao(field.getType(), value,clazz);
+					Object association = this.findAssociacao(field.getType(), id, clazz);
 					if(association != value){
 						fieldValue.put(field, association);
 					}else{
@@ -159,27 +166,30 @@ public class SuperDAO implements ISuperDAO{
 		}
 	}
 	
-	private boolean isOther(Class<?> clazz, Object id) throws PersistenceException{
+	private boolean isOther(Class<?> clazz, String field , Object id) throws PersistenceException{
 		try {
-			prepare = conn.prepareStatement(sql.sqlFindById(clazz, id));
+			prepare = conn.prepareStatement(sql.sqlFindByFieldAndValue(clazz, field, id));
 			ResultSet resultSet = prepare.executeQuery();
-			List<Field> fields = reflectionUtil.fields(clazz);
+			Object value = null;
 			Object obj = ObjectReflectionUtil.newInstance(clazz);
+			List<Field> fields = reflectionUtil.fields(clazz);
 			Map<Field, Object> fieldValue = new HashMap<Field, Object>();
 			if(resultSet.next()){
 				for(Field f: fields){
-					Object value = resultSet.getObject(f.getName().toLowerCase());
+					value = resultSet.getObject(f.getName().toLowerCase());
 					if(value != null){
 						fieldValue.put(f, value);
 					}
 				}
 				obj = reflectionUtil.setAllValuesIgnoringClasses(fieldValue, clazz);
+				value = String.valueOf(resultSet.getObject(field.toLowerCase()));
 			}
-			System.out.println(reflectionUtil.getValue(obj, "id") + " == " + id);
-			if(reflectionUtil.getValue(obj, "id") == id){
-				return false;
+			if(value != null){
+				if(Integer.valueOf((String) value) == Integer.valueOf(String.valueOf(id))){
+					this.setObjectTemp(obj);
+					return false;
+				}
 			}
-			
 			return true;
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -195,13 +205,14 @@ public class SuperDAO implements ISuperDAO{
 			if(reflectionUtil.hasField(clazz, "id")){
 				Object obj = ObjectReflectionUtil.newInstance(clazz);
 				List<Field> fields = reflectionUtil.fields(clazz);
-				Class<?> otherClass = null;
+				boolean  boo = true;
 				for(Field field: fields){
-					if(field.getType().equals(evictLoop)){
-						otherClass = field.getType();
+					if(field.getType().equals(evictLoop) && value != null){
+						boo = this.isOther(clazz, field.getName(), value);
+						System.out.println();
 					}
 				}
-				if(obj != null && this.isOther(otherClass, value)){
+				if(obj != null && boo && value != null){
 					return this.findById(obj.getClass(), value);
 				}
 			}
@@ -209,5 +220,13 @@ public class SuperDAO implements ISuperDAO{
 			throw new PersistenceException(e);
 		}
 		return value;
+	}
+
+	public Object getObjectTemp() {
+		return objectTemp;
+	}
+
+	public void setObjectTemp(Object objectTemp) {
+		this.objectTemp = objectTemp;
 	}
 }
