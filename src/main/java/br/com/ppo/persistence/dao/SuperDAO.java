@@ -209,7 +209,6 @@ public class SuperDAO implements ISuperDAO{
 				for(Field field: fields){
 					if(field.getType().equals(evictLoop) && value != null){
 						boo = this.isOther(clazz, field.getName(), value);
-						System.out.println();
 					}
 				}
 				if(obj != null && boo && value != null){
