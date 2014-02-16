@@ -117,14 +117,19 @@ public class SuperDAO implements ISuperDAO{
 			if(resultSet.next()){
 				for(Field field: fields){
 					Object value = resultSet.getObject(field.getName().toLowerCase());
-					Object association = this.findAssociacao(field.getType(), id, clazz);
-					if(association != value){
-						fieldValue.put(field, association);
-					}else{
-						fieldValue.put(field, value);
+					if(value != null){
+						Object association = this.findAssociacao(field.getType(), id, clazz);
+						if(reflectionUtil.hasField(association.getClass(), "id")){
+							fieldValue.put(field, association);
+						}else if(field.getType().equals(this.getObjectTemp().getClass())){
+							fieldValue.put(field, this.getObjectTemp());
+						}else{
+							fieldValue.put(field, value);
+						}
 					}
 				}
 				obj = reflectionUtil.setAllValues(fieldValue, clazz);
+				obj = reflectionUtil.setAllValuesRecursive(obj);
 			}
 			return obj;
 		} catch (SQLException e) {

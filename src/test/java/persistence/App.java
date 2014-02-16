@@ -28,8 +28,8 @@ public class App {
 		try {
 			Funcionario d = new Funcionario();
 			Setor s = new Setor();
-			s.setNome("UM NOME");
-			d.setNome("ASDRUBAL");
+			s.setNome("TESTE");
+			d.setNome("FUNCIONÁRIO");
 			
 			s = dao.save(s);
 			
@@ -41,6 +41,9 @@ public class App {
 			
 			s = dao.update(s);
 			
+			System.out.println("Setor: "+s.getNome()+", Com id: "+ s.getId());
+			System.out.println("Secretário do setor: "+ s.getSecretario().getNome()+", Com id: "+s.getSecretario().getId());
+			System.out.println("ID do Setor: "+s.getId() + " == "+ s.getSecretario().getSetor().getId()+" ID DO SETOR DO SECRETÁRIO");
 		} catch (PersistenceException e) {
 			e.printStackTrace();
 		}

@@ -91,7 +91,7 @@ public class ObjectReflectionUtil {
 		Object object = newInstance(clazz);
 		for(Field field: fieldAndValue.keySet()){
 			Object value = fieldAndValue.get(field);
-			if(value != null && field.getType().equals(value.getClass())){
+			if(value != null && !this.hasField(field.getType(), "id")){
 				value = this.convertObject(field, value);
 				field.setAccessible(true);
 				field.set(object, value);
@@ -122,5 +122,18 @@ public class ObjectReflectionUtil {
 			clazz = iteratorClazz(clazz);
 		}
 		return false;
+	}
+
+	public Object setAllValuesRecursive(Object obj) throws IllegalArgumentException, IllegalAccessException {
+		Class<?> clazz = obj.getClass();
+		for(Field field: clazz.getDeclaredFields()){
+			for(Field f: field.getType().getDeclaredFields()){
+				if(f.getType().equals(obj.getClass())){
+					f.setAccessible(true);
+					f.set(obj, obj);
+				}
+			}
+		}
+		return obj;
 	}
 }
