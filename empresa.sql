@@ -4,7 +4,7 @@
 
 -- Dumped from database version 9.1.11
 -- Dumped by pg_dump version 9.1.11
--- Started on 2014-02-15 23:36:14 AMST
+-- Started on 2014-02-15 23:38:38 AMST
 
 SET statement_timeout = 0;
 SET client_encoding = 'UTF8';
@@ -21,7 +21,7 @@ CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
 
 
 --
--- TOC entry 1937 (class 0 OID 0)
+-- TOC entry 1938 (class 0 OID 0)
 -- Dependencies: 169
 -- Name: EXTENSION plpgsql; Type: COMMENT; Schema: -; Owner: 
 --
@@ -43,7 +43,8 @@ SET default_with_oids = false;
 
 CREATE TABLE "Funcionario" (
     id bigint NOT NULL,
-    nome character varying(255)
+    nome character varying(255),
+    setor bigint
 );
 
 
@@ -66,7 +67,7 @@ CREATE SEQUENCE "Funcionario_id_seq"
 ALTER TABLE public."Funcionario_id_seq" OWNER TO postgres;
 
 --
--- TOC entry 1938 (class 0 OID 0)
+-- TOC entry 1939 (class 0 OID 0)
 -- Dependencies: 163
 -- Name: Funcionario_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
@@ -76,7 +77,7 @@ ALTER SEQUENCE "Funcionario_id_seq" OWNED BY "Funcionario".id;
 
 --
 -- TOC entry 166 (class 1259 OID 16878)
--- Dependencies: 164 5
+-- Dependencies: 5 164
 -- Name: Gerente; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
 --
 
@@ -106,7 +107,7 @@ CREATE SEQUENCE "Gerente_id_seq"
 ALTER TABLE public."Gerente_id_seq" OWNER TO postgres;
 
 --
--- TOC entry 1939 (class 0 OID 0)
+-- TOC entry 1940 (class 0 OID 0)
 -- Dependencies: 165
 -- Name: Gerente_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
@@ -147,7 +148,7 @@ CREATE SEQUENCE "Setor_id_seq"
 ALTER TABLE public."Setor_id_seq" OWNER TO postgres;
 
 --
--- TOC entry 1940 (class 0 OID 0)
+-- TOC entry 1941 (class 0 OID 0)
 -- Dependencies: 161
 -- Name: Setor_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
@@ -186,7 +187,7 @@ CREATE SEQUENCE "Unidade_id_seq"
 ALTER TABLE public."Unidade_id_seq" OWNER TO postgres;
 
 --
--- TOC entry 1941 (class 0 OID 0)
+-- TOC entry 1942 (class 0 OID 0)
 -- Dependencies: 167
 -- Name: Unidade_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
@@ -205,7 +206,7 @@ ALTER TABLE ONLY "Funcionario" ALTER COLUMN id SET DEFAULT nextval('"Funcionario
 
 --
 -- TOC entry 1809 (class 2604 OID 16881)
--- Dependencies: 166 165 166
+-- Dependencies: 165 166 166
 -- Name: id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
@@ -231,17 +232,17 @@ ALTER TABLE ONLY "Unidade" ALTER COLUMN id SET DEFAULT nextval('"Unidade_id_seq"
 
 
 --
--- TOC entry 1925 (class 0 OID 16862)
--- Dependencies: 164 1930
+-- TOC entry 1926 (class 0 OID 16862)
+-- Dependencies: 164 1931
 -- Data for Name: Funcionario; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY "Funcionario" (id, nome) FROM stdin;
+COPY "Funcionario" (id, nome, setor) FROM stdin;
 \.
 
 
 --
--- TOC entry 1942 (class 0 OID 0)
+-- TOC entry 1943 (class 0 OID 0)
 -- Dependencies: 163
 -- Name: Funcionario_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
@@ -250,17 +251,17 @@ SELECT pg_catalog.setval('"Funcionario_id_seq"', 10, true);
 
 
 --
--- TOC entry 1927 (class 0 OID 16878)
--- Dependencies: 166 1930
+-- TOC entry 1928 (class 0 OID 16878)
+-- Dependencies: 166 1931
 -- Data for Name: Gerente; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY "Gerente" (id, nome, codigo) FROM stdin;
+COPY "Gerente" (id, nome, codigo, setor) FROM stdin;
 \.
 
 
 --
--- TOC entry 1943 (class 0 OID 0)
+-- TOC entry 1944 (class 0 OID 0)
 -- Dependencies: 165
 -- Name: Gerente_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
@@ -269,27 +270,28 @@ SELECT pg_catalog.setval('"Gerente_id_seq"', 58, true);
 
 
 --
--- TOC entry 1923 (class 0 OID 16854)
--- Dependencies: 162 1930
+-- TOC entry 1924 (class 0 OID 16854)
+-- Dependencies: 162 1931
 -- Data for Name: Setor; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
 COPY "Setor" (id, nome, unidade, secretario) FROM stdin;
+86	UM NOME	\N	\N
 \.
 
 
 --
--- TOC entry 1944 (class 0 OID 0)
+-- TOC entry 1945 (class 0 OID 0)
 -- Dependencies: 161
 -- Name: Setor_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('"Setor_id_seq"', 85, true);
+SELECT pg_catalog.setval('"Setor_id_seq"', 86, true);
 
 
 --
--- TOC entry 1929 (class 0 OID 16892)
--- Dependencies: 168 1930
+-- TOC entry 1930 (class 0 OID 16892)
+-- Dependencies: 168 1931
 -- Data for Name: Unidade; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
@@ -298,7 +300,7 @@ COPY "Unidade" (id, numero) FROM stdin;
 
 
 --
--- TOC entry 1945 (class 0 OID 0)
+-- TOC entry 1946 (class 0 OID 0)
 -- Dependencies: 167
 -- Name: Unidade_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
@@ -308,7 +310,7 @@ SELECT pg_catalog.setval('"Unidade_id_seq"', 6, true);
 
 --
 -- TOC entry 1814 (class 2606 OID 16870)
--- Dependencies: 164 164 1931
+-- Dependencies: 164 164 1932
 -- Name: Funcionario_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
 --
 
@@ -318,7 +320,7 @@ ALTER TABLE ONLY "Funcionario"
 
 --
 -- TOC entry 1816 (class 2606 OID 16886)
--- Dependencies: 166 166 1931
+-- Dependencies: 166 166 1932
 -- Name: Gerente_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
 --
 
@@ -328,7 +330,7 @@ ALTER TABLE ONLY "Gerente"
 
 --
 -- TOC entry 1812 (class 2606 OID 16859)
--- Dependencies: 162 162 1931
+-- Dependencies: 162 162 1932
 -- Name: Setor_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
 --
 
@@ -338,7 +340,7 @@ ALTER TABLE ONLY "Setor"
 
 --
 -- TOC entry 1818 (class 2606 OID 16897)
--- Dependencies: 168 168 1931
+-- Dependencies: 168 168 1932
 -- Name: Unidade_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
 --
 
@@ -347,8 +349,18 @@ ALTER TABLE ONLY "Unidade"
 
 
 --
+-- TOC entry 1821 (class 2606 OID 16913)
+-- Dependencies: 162 164 1811 1932
+-- Name: Funcionario_setor_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY "Funcionario"
+    ADD CONSTRAINT "Funcionario_setor_fkey" FOREIGN KEY (setor) REFERENCES "Setor"(id);
+
+
+--
 -- TOC entry 1820 (class 2606 OID 16908)
--- Dependencies: 164 162 1813 1931
+-- Dependencies: 1813 162 164 1932
 -- Name: Setor_secretario_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -358,7 +370,7 @@ ALTER TABLE ONLY "Setor"
 
 --
 -- TOC entry 1819 (class 2606 OID 16903)
--- Dependencies: 1817 168 162 1931
+-- Dependencies: 162 168 1817 1932
 -- Name: Setor_unidade_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -367,7 +379,7 @@ ALTER TABLE ONLY "Setor"
 
 
 --
--- TOC entry 1936 (class 0 OID 0)
+-- TOC entry 1937 (class 0 OID 0)
 -- Dependencies: 5
 -- Name: public; Type: ACL; Schema: -; Owner: postgres
 --
@@ -378,7 +390,7 @@ GRANT ALL ON SCHEMA public TO postgres;
 GRANT ALL ON SCHEMA public TO PUBLIC;
 
 
--- Completed on 2014-02-15 23:36:14 AMST
+-- Completed on 2014-02-15 23:38:38 AMST
 
 --
 -- PostgreSQL database dump complete
