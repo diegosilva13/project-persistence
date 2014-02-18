@@ -129,7 +129,6 @@ public class SuperDAO implements ISuperDAO{
 					}
 				}
 				obj = reflectionUtil.setAllValues(fieldValue, clazz);
-				obj = reflectionUtil.insertObject(obj, this.getObjectTemp());
 			}
 			return obj;
 		} catch (SQLException e) {
