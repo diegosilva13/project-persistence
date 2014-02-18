@@ -10,11 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.lang.ObjectUtils;
-import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
-
-import com.jidesoft.converter.IntegerConverter;
 
 import br.com.ppo.persistence.database.Config;
 import br.com.ppo.persistence.exception.PersistenceException;
@@ -133,6 +129,7 @@ public class SuperDAO implements ISuperDAO{
 					}
 				}
 				obj = reflectionUtil.setAllValues(fieldValue, clazz);
+				obj = reflectionUtil.insertObject(obj, this.getObjectTemp());
 			}
 			return obj;
 		} catch (SQLException e) {
@@ -178,7 +175,7 @@ public class SuperDAO implements ISuperDAO{
 		try {
 			prepare = conn.prepareStatement(sql.sqlFindByFieldAndValue(clazz, field, id));
 			ResultSet resultSet = prepare.executeQuery();
-			Object value = null;
+			Object value = "0";
 			Object obj = ObjectReflectionUtil.newInstance(clazz);
 			List<Field> fields = reflectionUtil.fields(clazz);
 			Map<Field, Object> fieldValue = new HashMap<Field, Object>();
@@ -193,11 +190,10 @@ public class SuperDAO implements ISuperDAO{
 				value = String.valueOf(resultSet.getObject(field.toLowerCase()));
 			}
 			if(value != null){
-				if(Integer.valueOf(String.valueOf(value)) == Integer.valueOf(String.valueOf(id))){
+				if(String.valueOf(value).equalsIgnoreCase(String.valueOf(id))){
 					this.setObjectTemp(obj);
 					return false;
 				}
-				System.out.println((Integer.valueOf(String.valueOf(value)) == Integer.valueOf(String.valueOf(id))) + " | "+ (Integer.valueOf((String) value)+"="+Integer.valueOf(String.valueOf(id))));
 			}
 			return true;
 		} catch (SQLException e) {
