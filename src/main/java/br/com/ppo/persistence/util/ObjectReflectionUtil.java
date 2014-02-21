@@ -126,23 +126,55 @@ public class ObjectReflectionUtil {
 				}
 			}
 			clazz = iteratorClazz(clazz);
+			if(clazz == null){
+				break;
+			}
 		}
 		return false;
 	}
 
-	public Object setAllValuesRecursive(Object obj) throws IllegalArgumentException, IllegalAccessException {
+	public Object setThisRecursive(Object obj) throws IllegalArgumentException, IllegalAccessException, SecurityException, NoSuchFieldException {
 		Class<?> clazz = obj.getClass();
+		Integer id = (Integer) this.getValue(obj, "id");
 		for(Field field: clazz.getDeclaredFields()){
-			for(Field f: field.getType().getDeclaredFields()){
-				if(f.getType().equals(obj.getClass())){
-					f.setAccessible(true);
-					f.set(obj, obj);
+			if(this.hasField(field.getType(), "id")){
+				Class<?> iterator = field.getType();
+				while(!iterator.equals(Object.class)){
+					for(Field f: iterator.getDeclaredFields()){
+						if(this.hasField(f.getType(),"id")){
+							f.setAccessible(true);
+							field.setAccessible(true);
+							Object toCast = field.get(obj);
+							if(toCast != null && toCast.getClass().equals(f.getType())){
+								Object value = f.get(f.getType().cast(toCast));
+								Integer fk = (Integer) this.getValue(value, "id");
+								if(id.equals(fk)){
+									f.set(obj, this.copyObject(obj, value));
+								}
+							}
+						}
+					}
+					iterator = iteratorClazz(iterator);
 				}
 			}
 		}
 		return obj;
 	}
 	
+	private Object copyObject(Object obj, Object value) throws IllegalArgumentException, IllegalAccessException {
+		for(Field f1: obj.getClass().getDeclaredFields()){
+			f1.setAccessible(true);
+			Object copy = f1.get(obj);
+			for(Field f2: obj.getClass().getDeclaredFields()){
+				f2.setAccessible(true);
+				if(f2.getType().equals(f1.getType()) && f2.getName().equalsIgnoreCase(f1.getName())){
+					f2.set(value, copy);
+				}
+			}
+		}
+		return value;
+	}
+
 	public Object insertObject(Object object, Object toInsert) throws IllegalArgumentException, IllegalAccessException, InstantiationException{
 		Class<?> clazz = object.getClass();
 		while(!clazz.equals(Object.class)){

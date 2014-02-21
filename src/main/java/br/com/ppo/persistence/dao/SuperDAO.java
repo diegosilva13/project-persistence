@@ -129,6 +129,7 @@ public class SuperDAO implements ISuperDAO{
 					}
 				}
 				obj = reflectionUtil.setAllValues(fieldValue, clazz);
+				obj = reflectionUtil.setThisRecursive(obj);
 			}
 			return obj;
 		} catch (SQLException e) {
