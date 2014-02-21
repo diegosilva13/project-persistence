@@ -87,14 +87,18 @@ public class ObjectReflectionUtil {
 		return object;
 	}
 	
-	public Object setAllValuesIgnoringClasses(Map<Field, Object> fieldAndValue, Class<?> clazz) throws InstantiationException, IllegalAccessException, NoSuchFieldException, SecurityException {
+	public Object setAllValuesIgnoringClasses(Map<Field, Object> fieldAndValue, Class<?> clazz, String fk) throws InstantiationException, IllegalAccessException, NoSuchFieldException, SecurityException {
 		Object object = newInstance(clazz);
+		Object recursive = this.newInstanceOfField(clazz, fk);
 		for(Field field: fieldAndValue.keySet()){
 			if(!field.getName().equalsIgnoreCase("serialversionuid")){
 				Object value = fieldAndValue.get(field);
-				if(value != null && !this.hasField(field.getType(), "id")){
+				field.setAccessible(true);
+				if(field.getName().equalsIgnoreCase(fk)){
+					this.setValue(recursive, value, "id");
+					field.set(object, recursive);
+				}else if(value != null && !this.hasField(field.getType(), "id")){
 					value = this.convertObject(field, value);
-					field.setAccessible(true);
 					field.set(object, value);
 				}
 			}

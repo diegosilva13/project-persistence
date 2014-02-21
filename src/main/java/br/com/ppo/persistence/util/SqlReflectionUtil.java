@@ -51,7 +51,6 @@ public class SqlReflectionUtil implements ISqlReflectionUtil {
 			e.printStackTrace();
 			throw new UtilException(e,"Ocorreu um erro inesperado.");
 		}
-		System.out.println("Gerado o sql do método SQLSAVE: "+querys.toString());
 		return querys.toString();
 	}
 
@@ -107,7 +106,6 @@ public class SqlReflectionUtil implements ISqlReflectionUtil {
 				throw new PersistenceException("O objeto não possui um [ID] para atualização.");
 			}
 			String queryString = querys.toString().replaceAll(":id", String.valueOf(id));
-			System.out.println("Gerado o sql do método SQLUPDATE: "+queryString);
 			return queryString;
 		} catch (SecurityException e) {
 			e.printStackTrace();
@@ -144,7 +142,6 @@ public class SqlReflectionUtil implements ISqlReflectionUtil {
 		if (id != null) {
 			sql.append(" WHERE ").append("id").append("=").append(id);
 		}
-		System.out.println(sql.toString());
 		return sql.toString();
 	}
 	
@@ -158,7 +155,6 @@ public class SqlReflectionUtil implements ISqlReflectionUtil {
 		StringBuffer sql = new StringBuffer();
 		sql.append("SELECT * FROM \"").append(clazz.getSimpleName()+"\"");
 		sql.append(" WHERE ").append(field).append("=").append(value);
-		System.out.println(sql.toString());
 		return sql.toString();
 	}
 	

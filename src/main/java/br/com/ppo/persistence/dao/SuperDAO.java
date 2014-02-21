@@ -185,7 +185,7 @@ public class SuperDAO implements ISuperDAO{
 						fieldValue.put(f, value);
 					}
 				}
-				obj = reflectionUtil.setAllValuesIgnoringClasses(fieldValue, clazz);
+				obj = reflectionUtil.setAllValuesIgnoringClasses(fieldValue, clazz,field);
 				value = String.valueOf(resultSet.getObject(field.toLowerCase()));
 			}
 			if(value != null){
@@ -205,7 +205,6 @@ public class SuperDAO implements ISuperDAO{
 	
 	private Object findAssociacao(Class<?> clazz, Object value, Class<?> evictLoop) throws PersistenceException{
 		try {
-			
 			if(reflectionUtil.hasField(clazz, "id")){
 				Object obj = ObjectReflectionUtil.newInstance(clazz);
 				List<Field> fields = reflectionUtil.fields(clazz);
