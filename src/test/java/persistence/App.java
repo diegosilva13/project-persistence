@@ -41,6 +41,8 @@ public class App {
 			
 			s = dao.update(s);
 			
+			System.out.println(s.getId() + " = "+ d.getId());
+			
 			Funcionario f = s.getSecretario();
 			Setor s2 = f.getSetor();
 			Funcionario f2 = s2.getSecretario();
@@ -48,6 +50,9 @@ public class App {
 			System.out.println("Nome f: "+f.getNome());
 			System.out.println("Nome do setor: "+s2.getNome());
 			System.out.println("Nome f2: "+f2.getNome());
+			
+			System.out.println(f2.getSetor().getId() + " = "+ f2.getSetor().getSecretario().getId());
+			
 		} catch (PersistenceException e) {
 			e.printStackTrace();
 		}catch (Exception e) {

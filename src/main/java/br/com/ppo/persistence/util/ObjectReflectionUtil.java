@@ -137,24 +137,26 @@ public class ObjectReflectionUtil {
 		Class<?> clazz = obj.getClass();
 		Integer id = (Integer) this.getValue(obj, "id");
 		for(Field field: clazz.getDeclaredFields()){
-			if(this.hasField(field.getType(), "id")){
-				Class<?> iterator = field.getType();
-				while(!iterator.equals(Object.class)){
-					for(Field f: iterator.getDeclaredFields()){
-						if(this.hasField(f.getType(),"id")){
-							f.setAccessible(true);
-							field.setAccessible(true);
-							Object toCast = field.get(obj);
-							if(toCast != null && toCast.getClass().equals(f.getType())){
-								Object value = f.get(f.getType().cast(toCast));
-								Integer fk = (Integer) this.getValue(value, "id");
-								if(id.equals(fk)){
-									f.set(obj, this.copyObject(obj, value));
+			field.setAccessible(true);
+			Object temp = field.get(obj);
+			if(temp != null){
+				if(this.hasField(field.getType(), "id")){
+					Class<?> iterator = temp.getClass();
+					while(!iterator.equals(Object.class)){
+						for(Field f: iterator.getDeclaredFields()){
+							if(this.hasField(f.getType(),"id")){
+								f.setAccessible(true);
+								Object value = f.getType().cast(f.get(temp));
+								if(f.getType().equals(obj.getClass()) && value != null){
+									Integer fk = (Integer) this.getValue(value, "id");
+									if(id.equals(fk)){
+										f.set(temp, obj.getClass().cast(this.copyObject(obj, value)));
+									}
 								}
 							}
 						}
+						iterator = iteratorClazz(iterator);
 					}
-					iterator = iteratorClazz(iterator);
 				}
 			}
 		}
@@ -167,7 +169,7 @@ public class ObjectReflectionUtil {
 			Object copy = f1.get(obj);
 			for(Field f2: obj.getClass().getDeclaredFields()){
 				f2.setAccessible(true);
-				if(f2.getType().equals(f1.getType()) && f2.getName().equalsIgnoreCase(f1.getName())){
+				if(f2.getType().equals(f1.getType()) && f2.getName().equalsIgnoreCase(f1.getName()) && !f1.getName().equalsIgnoreCase("serialversionuid")){
 					f2.set(value, copy);
 				}
 			}
