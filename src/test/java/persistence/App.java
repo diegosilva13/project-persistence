@@ -45,6 +45,7 @@ public class App {
 			System.out.println("Secretário do setor: "+ s.getSecretario().getNome()+", Com id: "+s.getSecretario().getId());
 			System.out.println("ID do Setor: "+s.getId() + " == "+ s.getSecretario().getSetor().getId()+" ID DO SETOR DO SECRETÁRIO");
 			
+			
 		} catch (PersistenceException e) {
 			e.printStackTrace();
 		}catch (Exception e) {
