@@ -90,9 +90,9 @@ public class SuperDAO implements ISuperDAO{
 	}
 
 	@Override
-	public Boolean removeAll(Object object) throws PersistenceException {
+	public Boolean removeAll(Class<?> clazz) throws PersistenceException {
 		try {
-			prepare = conn.prepareStatement(sql.sqlRemoveAll(object.getClass()));
+			prepare = conn.prepareStatement(sql.sqlRemoveAll(clazz));
 			if(!prepare.execute()){
 				return true;
 			}
@@ -150,16 +150,22 @@ public class SuperDAO implements ISuperDAO{
 			List<Object> objects = new ArrayList<>();
 			while(resultSet.next()){
 				Object obj = ObjectReflectionUtil.newInstance(clazz);
+				Object id = resultSet.getObject("id");
 				for(Field field: fields){
 					Object value = resultSet.getObject(field.getName().toLowerCase());
-					Object association = this.findAssociacao(field.getType(), value, clazz);
-					if(association != value){
-						fieldValue.put(field, association);
-					}else{
-						fieldValue.put(field, value);
+					if(value != null){
+						Object association = this.findAssociacao(field.getType(), id, clazz);
+						if(reflectionUtil.hasField(association.getClass(), "id")){
+							fieldValue.put(field, association);
+						}else if(field.getType().equals(this.getObjectTemp().getClass())){
+							fieldValue.put(field, this.getObjectTemp());
+						}else{
+							fieldValue.put(field, value);
+						}
 					}
 				}
 				obj = reflectionUtil.setAllValues(fieldValue, clazz);
+				obj = reflectionUtil.setThisRecursive(obj);
 				objects.add(obj);
 			}
 			return objects;

@@ -176,18 +176,4 @@ public class ObjectReflectionUtil {
 		}
 		return value;
 	}
-
-	public Object insertObject(Object object, Object toInsert) throws IllegalArgumentException, IllegalAccessException, InstantiationException{
-		Class<?> clazz = object.getClass();
-		while(!clazz.equals(Object.class)){
-			for(Field field: clazz.getDeclaredFields()){
-				field.setAccessible(true);
-				if(this.hasField(field.getType(), "id") && field.get(object) == null && field.getType().equals(toInsert.getClass())){
-					field.set(object, toInsert);
-				}
-			}
-			clazz = ObjectReflectionUtil.iteratorClazz(clazz);
-		}
-		return object;
-	}
 }
