@@ -1,8 +1,7 @@
 PPO
 ===================
-Implementação de um sistema de persistencia básico.
-
-
+Implementação de um sistema de persistencia básico. Eu estava fazendo esse projeto para usar em um trabalho da faculdade e para 
+conhecer um pouco mais a linguagem java, que na época eu estava aprendendo, mas no meio do caminho ouvi falar em um tal de Hibernate que implementava um tal de JPA, resolvi estudar mais os dois, aí esse projeto acabou(kkkkk).
 
 
 
